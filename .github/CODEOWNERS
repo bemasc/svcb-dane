@@ -1,0 +1,3 @@
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
+draft-rebs-dnsop-svcb-dane.md bemasc@google.com evansr@google.com
