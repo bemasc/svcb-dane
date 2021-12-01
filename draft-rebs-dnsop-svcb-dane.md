@@ -1,24 +1,4 @@
 ---
-###
-# Internet-Draft Markdown Template
-#
-# Rename this file from draft-todo-yourname-protocol.md to get started.
-# Draft name format is "draft-<yourname>-<workgroup>-<name>.md".
-#
-# For initial setup, you only need to edit the first block of fields.
-# Only "title" needs to be changed; delete "abbrev" if your title is short.
-# Any other content can be edited, but be careful not to introduce errors.
-# Some fields will be set automatically during setup if they are unchanged.
-#
-# Don't include "-00" or "-latest" in the filename.
-# Labels in the form draft-<yourname>-<workgroup>-<name>-latest are used by
-# the tools to refer to the current version; see "docname" for example.
-#
-# This template uses kramdown-rfc2629: https://github.com/cabo/kramdown-rfc2629
-# You can replace the entire file if you prefer a different format.
-# Change the file extension to match the format (.xml for XML, etc...)
-#
-###
 title: "Using Service Bindings with DANE"
 abbrev: "SVCB-DANE"
 category: std
@@ -89,11 +69,11 @@ If the client has SVCB-optional behavior (as defined in {{Section 3 of SVCB}}), 
 
 # Updating the TLSA protocol prefixes {#protocols}
 
-{{Section 3 of !RFC6698}} defines the protocol prefix used for constructing TLSA QNAMEs, and says:
+{{Section 3 of !RFC6698}} defined the protocol prefix used for constructing TLSA QNAMEs, and said:
 
 > The transport names defined for this protocol are "tcp", "udp", and "sctp".
 
-At that time, there was exactly one TLS-based protocol defined for use with each of these transports.  However, with the introduction of QUIC {{!RFC9000}}, there are now multiple TLS-derived protocols that can operate over UDP, even on the same port.  To distinguish the availability and configuration of DTLS and QUIC, this draft Updates the above sentence as follows:
+At that time, there was exactly one TLS-based protocol defined for each of these transports.  However, with the introduction of QUIC {{!RFC9000}}, there are now multiple TLS-derived protocols that can operate over UDP, even on the same port.  To distinguish the availability and configuration of DTLS and QUIC, this draft Updates the above sentence as follows:
 
 > The transport names defined for this protocol are "tcp" (TLS over TCP {{!RFC8446}}), "udp" (DTLS {{!I-D.draft-ietf-tls-dtls13}}), "sctp" (TLS over SCTP {{!RFC3436}}), and "quic" (QUIC {{!RFC9000}}).
 
@@ -111,7 +91,7 @@ xyz.provider.com.           A     192.0.2.1
 _443._tcp.xyz.provider.com. TLSA  <provider keys>
 ~~~
 
-For ease of management, providers may want to alias various endpoints to a single TLSA RRSet:
+For ease of management, providers may want to alias various TLSA QNAMEs to a single RRSet:
 
 ~~~
 _443._tcp.xyz.provider.com. CNAME dane-central.provider.com.
@@ -122,9 +102,9 @@ dane-central.provider.com.  TLSA  <provider keys>
 
 When a service is used by third-party consumers, DANE allows the consumer to publish records that make claims about the certificates used by the service.  When the service subsequently rotates its TLS keys, DANE authentication will fail for these consumers, resulting in an outage.  Accordingly, zone owners MUST NOT publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.
 
-To prevents the above misconfiguration and ensure that TLS keys can be rotated freely,service operators MAY reject TLS connections whose SNI does not correspond to an approved TLSA base domain.
+To prevents the above misconfiguration and ensure that TLS keys can be rotated freely, service operators MAY reject TLS connections whose SNI does not correspond to an approved TLSA base domain.
 
-Service Bindings also enable any third party consumer to publish fixed SvcParams for the service.  This can cause an outage or service degradation if the service makes a backward-incompatible configuration change.  Accordingly, zone owners SHOULD NOT publish publish SvcParams for a TargetName that they do not control, and service operators should take caution when making incompatible configuration changes.
+Service Bindings also enable any third party consumer to publish fixed SvcParams for the service.  This can cause an outage or service degradation if the service makes a backward-incompatible configuration change.  Accordingly, zone owners SHOULD NOT publish SvcParams for a TargetName that they do not control, and service operators should take caution when making incompatible configuration changes.
 
 
 # Security Considerations
