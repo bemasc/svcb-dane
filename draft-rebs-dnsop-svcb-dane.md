@@ -31,7 +31,7 @@ informative:
 
 --- abstract
 
-DNS-Based Authentication of Named Entities (DANE) cannot be used with a new method of indirection in the DNS until their interaction is specified.  This document specifies the interaction of DANE with the Service Binding (SVCB) system.
+Service Binding records introduce a new form of name indirection in DNS. This document specifies DNS-Based Authentication of Named Entities (DANE) interaction with Service Bindings to secure endpoints including use of ports and transports discovered via Service Parameters.
 
 --- middle
 
@@ -56,15 +56,17 @@ This draft describes the interaction of DANE with indirection via Service Bindin
 
 This draft applies the same logic to SVCB-compatible records.  Specifically, if SVCB resolution was entirely secure (including any AliasMode records and/or CNAMEs), then for each connection attempt derived from a SVCB-compatible record,
 
-* The TLSA base domain MUST be the final SVCB TargetName.
+* The initial TLSA base domain MUST be the final SVCB TargetName used for this connection attempt.  (Names appearing earlier in a resolution chain are not used.)
 * The transport prefix MUST be the transport of this connection attempt (possibly influenced by the "alpn" SvcParam).
 * The port prefix MUST be the port number of this connection attempt (possibly influenced by the "port" SvcParam).
 
-If the SVCB TargetName contains a CNAME record, clients MUST try to use both the alias target and owner as the base domain, as described in {{Section 7 of RFC7671}}.  If the TLSA QNAME is aliased by a CNAME, clients MUST follow the CNAME to complete the resolution.  (This does not alter the TLSA base domain.)
+If the SVCB TargetName contains a CNAME record, clients MUST first try to use the CNAME target as the TLSA base domain, with fallback to the final SVCB TargetName as the TLSA base domain, as described in {{Section 7 of RFC7671}}.
 
-If a TLSA RRSet is securely resolved, the client MUST set the SNI to the TLSA base domain.  In usage modes other than DANE-EE(3), the client MUST validate that the certificate covers this base domain, and MUST NOT require it to cover any other domain.
+If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA CNAME to complete the resolution of the TLSA record.  (This does not alter the TLSA base domain.)
 
-If the client has SVCB-optional behavior (as defined in {{Section 3 of SVCB}}), it MUST use standard DANE logic when falling back to non-SVCB connection.
+If a TLSA RRSet is securely resolved, the client MUST set the SNI to the TLSA base domain of the RRSet.  In usage modes other than DANE-EE(3), the client MUST validate that the certificate covers this base domain, and MUST NOT require it to cover any other domain.
+
+If the client has SVCB-optional behavior (as defined in {{Section 3 of SVCB}}), it MUST use the standard DANE logic described in {{Section 4.1 of RFC6698}} when falling back to non-SVCB connection.
 
 
 # Updating the TLSA protocol prefixes {#protocols}
@@ -116,9 +118,13 @@ This document only specifies the use of TLSA records when the SVCB records were 
 
 # Examples
 
+The following examples demonstrate Serving Binding interaction with TLSA base domain selection.
+
+All of the RRSets below are assumed fully-secure with all related DNSSEC record types omitted for brevity.
+
 ## HTTPS ServiceMode
 
-Given service https://api.example.com and record:
+Given service URI `https://api.example.com` and record:
 
 ~~~
 api.example.com. HTTPS 1 .
@@ -128,7 +134,7 @@ The TLSA QNAME is `_443._tcp.api.example.com`.
 
 ## HTTPS AliasMode
 
-Given service https://api.example.com and records:
+Given service URI `https://api.example.com` and records:
 
 ~~~
 api.example.com.     HTTPS 0 svc4.example.net.
@@ -140,38 +146,43 @@ The TLSA QNAME is `_443._tcp.xyz.example-cdn.com`.
 
 ## QUIC and CNAME
 
-Given service https://api.example.com and records:
+Given service URI `https://api.example.com` and records:
 
 ~~~
 www.example.com.  CNAME api.example.com.
-api.example.com.  HTTPS 1 svc4.example.net alpn=h3 port=8443
+api.example.com.  HTTPS 1 svc4.example.net alpn=h2,h3 port=8443
 svc4.example.net. CNAME xyz.example-cdn.com.
 ~~~
 
-The TLSA QNAME would be one of:
+If the connection attempt is using HTTP/3, the transport label is set to `_quic`\; otherwise `_tcp` is used.
+
+The initial TLSA QNAME would be one of:
 
 * `_8443._quic.svc4.example.net`
-* `_8443._quic.xyz.example-cdn.com`
 * `_8443._tcp.svc4.example.net`
+
+If no TLSA record is found, the fallback TLSA QNAME would be one of:
+
+* `_8443._quic.xyz.example-cdn.com`
 * `_8443._tcp.xyz.example-cdn.com`
 
 ## New scheme ServiceMode
 
-Given service foo://api.example.com:8443 and record:
+Given service URI `foo://api.example.com:8443` and record:
 
 ~~~
 _8443._foo.api.example.com. SVCB 1 api.example.com.
 ~~~
 
-The TLSA QNAME is `_8443._$PROTO.api.example.com`, where $PROTO is the appropriate value as discussed in {{protocols}}.
+The TLSA QNAME is `_8443._$PROTO.api.example.com`, where $PROTO is the appropriate value for the client-selected transport as discussed in {{protocols}} .
 
 ## New scheme AliasMode
 
-Given service foo://api.example.com:8443 and records:
+Given service URI `foo://api.example.com:8443` and records:
 
 ~~~
 _8443._foo.api.example.com. SVCB 0 svc4.example.net.
-svc4.example.net.           SVCB 3 .
+svc4.example.net.           SVCB 1 .
 svc4.example.net.           A    192.0.2.1
 ~~~
 
@@ -179,18 +190,18 @@ The TLSA QNAME is `_8443._$PROTO.svc4.example.net` (with $PROTO as above).  This
 
 ## New protocols
 
-Given service foo://api.example.com:8443 and records:
+Given service URI `foo://api.example.com:8443` and records:
 
 ~~~
 _8443._foo.api.example.com. SVCB 0 svc4.example.net.
 svc4.example.net. SVCB 3 . alpn=foo,bar port=8004
 ~~~
 
-The TLSA QNAME is `_8004._$PROTO1.svc4.example.net` or `_8004._$PROTO2.svc4.example.net`, where $PROTO1 and $PROTO2 are the transport prefixes appropriate for "foo" and "bar" respectively.  Note that SVCB requires each ALPN to unambiguously indicate a transport.
+The TLSA QNAME is `_8004._$PROTO1.svc4.example.net` or `_8004._$PROTO2.svc4.example.net`, where $PROTO1 and $PROTO2 are the transport prefixes appropriate for "foo" and "bar" respectively.  (Note that SVCB requires each ALPN to unambiguously indicate a transport.)
 
 ## DNS ServiceMode
 
-Given a DNS server dns.example.com and record:
+Given a DNS server `dns.example.com` and record:
 
 ~~~
 _dns.dns.example.com. SVCB 1 dns.example.com. alpn=dot
@@ -200,7 +211,7 @@ The TLSA QNAME is `_853._tcp.dns.example.com`.  The TLSA base name is taken from
 
 ## DNS AliasMode
 
-Given a DNS server dns.example.com and records:
+Given a DNS server `dns.example.com` and records:
 
 ~~~
 _dns.dns.example.com. SVCB 0 dns.my-dns-host.net.
