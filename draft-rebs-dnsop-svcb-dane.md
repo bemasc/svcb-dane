@@ -54,7 +54,7 @@ This draft describes the interaction of DANE with indirection via Service Bindin
 
 > With protocols that support explicit transport redirection via DNS MX records, SRV records, or other similar records, the TLSA base domain is based on the redirected transport endpoint rather than the origin domain.
 
-This draft applies the same logic to SVCB-compatible records.  Specifically, if SVCB resolution was entirely secure, then for each connection attempt derived from a SVCB-compatible record,
+This draft applies the same logic to SVCB-compatible records.  Specifically, if SVCB resolution was entirely secure (including any AliasMode records and/or CNAMEs), then for each connection attempt derived from a SVCB-compatible record,
 
 * The TLSA base domain MUST be the final SVCB TargetName.
 * The transport prefix MUST be the transport of this connection attempt (possibly influenced by the "alpn" SvcParam).
@@ -212,8 +212,11 @@ The TLSA QNAME is `_853._tcp.ns1.my-dns-host.net`.
 
 # IANA Considerations
 
-This document has no IANA actions.
+IANA is instructed to add the following entry to the "Underscored and Globally Scoped DNS Node Names" registry:
 
+| RR Type | _NODE NAME | Reference       |
+| ------- | ---------- | --------------- |
+| TLSA    | _quic      | (This document) |
 
 --- back
 
