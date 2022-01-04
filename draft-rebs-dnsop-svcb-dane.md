@@ -60,7 +60,7 @@ This draft applies the same logic to SVCB-compatible records.  Specifically, if 
 * The transport prefix MUST be the transport of this connection attempt (possibly influenced by the "alpn" SvcParam).
 * The port prefix MUST be the port number of this connection attempt (possibly influenced by the "port" SvcParam).
 
-If the SVCB TargetName contains a CNAME record, clients MUST first try to use the CNAME target as the TLSA base domain, with fallback to the final SVCB TargetName as the TLSA base domain, as described in {{Section 7 of RFC7671}}.
+If the initial TLSA base domain is the start of a secure CNAME chain, clients MUST first try to use the end of the chain as the TLSA base domain, with fallback to the initial base domain, as described in {{Section 7 of RFC7671}}.
 
 If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA CNAME to complete the resolution of the TLSA record.  (This does not alter the TLSA base domain.)
 
