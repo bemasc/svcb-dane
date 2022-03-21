@@ -154,17 +154,17 @@ api.example.com.  HTTPS 1 svc4.example.net alpn=h2,h3 port=8443
 svc4.example.net. CNAME xyz.example-cdn.com.
 ~~~
 
-If the connection attempt is using HTTP/3, the transport label is set to `_quic`\; otherwise `_tcp` is used.
+If the connection attempt is using HTTP/3, the transport label is set to `_quic`; otherwise `_tcp` is used.
 
 The initial TLSA QNAME would be one of:
 
-* `_8443._quic.svc4.example.net`
-* `_8443._tcp.svc4.example.net`
+* `_8443._quic.xyz.example-cdn.com`
+* `_8443._tcp.xyz.example-cdn.com`
 
 If no TLSA record is found, the fallback TLSA QNAME would be one of:
 
-* `_8443._quic.xyz.example-cdn.com`
-* `_8443._tcp.xyz.example-cdn.com`
+* `_8443._quic.svc4.example.net`
+* `_8443._tcp.svc4.example.net`
 
 ## New scheme ServiceMode
 
