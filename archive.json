@@ -1,0 +1,251 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2022-05-22T00:51:43.212599+00:00",
+  "repo": "bemasc/svcb-dane",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOGdgwDc4vnmGq",
+      "title": "Clarify CNAME handling and add IANA section",
+      "url": "https://github.com/bemasc/svcb-dane/pull/1",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-12-09T14:58:13Z",
+      "updatedAt": "2021-12-09T15:27:09Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "6baf00b62785a735c275b843d29271b120eb9c7f",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-update1",
+      "headRefOid": "f366cb815f6685e6273098c53b1f13cb357f763f",
+      "closedAt": "2021-12-09T15:27:04Z",
+      "mergedAt": "2021-12-09T15:27:04Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "cee0830b9721794a1dc5a86a36840cf2bcb7fd68"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOGdgwDc4voe6X",
+      "title": "Minor revisions",
+      "url": "https://github.com/bemasc/svcb-dane/pull/2",
+      "state": "MERGED",
+      "author": "evansrg",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For normative text:\r\n- Update abstract\r\n- Clarify \"final\" means following AliasMode indirection\r\n- Specify that TargetName CNAME target base domain must be resolved first\r\n- Clarify that SNI and base name match the actual TLSA record found\r\n\r\nFor examples:\r\n- State that DNSSEC is assumed for examples\r\n- Add \"URI\" when describing example services for clarity\r\n- Fix 0 priority in ServiceMode record\r\n- Explain transport label is selected by client\r\n- Explain CNAME fallback sequence\r\n- Minor formatting",
+      "createdAt": "2021-12-09T19:43:14Z",
+      "updatedAt": "2021-12-09T22:07:38Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "cee0830b9721794a1dc5a86a36840cf2bcb7fd68",
+      "headRepository": "evansrg/svcb-dane",
+      "headRefName": "edits",
+      "headRefOid": "85f22fcb98d1eaf4517c043bcc688c55636612e4",
+      "closedAt": "2021-12-09T22:07:38Z",
+      "mergedAt": "2021-12-09T22:07:38Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "10ba733905972c6307cf4016cfe896992a9a0f54"
+      },
+      "comments": [
+        {
+          "author": "evansrg",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Updated and squashed",
+          "createdAt": "2021-12-09T21:59:52Z",
+          "updatedAt": "2021-12-09T21:59:52Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGdgwDc4xXH-1",
+          "commit": {
+            "abbreviatedOid": "4792637"
+          },
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-12-09T20:08:44Z",
+          "updatedAt": "2021-12-09T20:20:34Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "```suggestion\r\n* The initial TLSA base domain MUST be the final SVCB TargetName used for this connection attempt.  (Names appearing earlier in a resolution chain are not used.)\r\n```",
+              "createdAt": "2021-12-09T20:08:44Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 19,
+              "body": "```suggestion\r\nIf the SVCB TargetName contains a CNAME record, clients MUST first try to use the CNAME target as the TLSA base domain, with fallback to the final SVCB TargetName as the TLSA base domain, as described in {{Section 7 of RFC7671}}.\r\n```",
+              "createdAt": "2021-12-09T20:09:24Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 73,
+              "body": "```suggestion\r\nIf the connection attempt is using HTTP/3, the transport label is set to `_quic`\\; otherwise `_tcp` is used.\r\n```",
+              "createdAt": "2021-12-09T20:11:52Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 69,
+              "body": "```suggestion\r\napi.example.com.  HTTPS 1 svc4.example.net alpn=h2,h3 port=8443\r\n```",
+              "createdAt": "2021-12-09T20:12:38Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 75,
+              "body": "```suggestion\r\nThe initial TLSA QNAME would be one of:\r\n```",
+              "createdAt": "2021-12-09T20:13:16Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 96,
+              "body": "```suggestion\r\nThe TLSA QNAME is `_8443._$PROTO.api.example.com`, where $PROTO is the appropriate value for the client-selected transport as discussed in {{protocols}} .\r\n```",
+              "createdAt": "2021-12-09T20:14:29Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 56,
+              "body": "I liked this better the other way.  HTTPS does allow the chain to terminate with an AliasMode record.  This way seems too similar to the previous example.",
+              "createdAt": "2021-12-09T20:17:40Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGdgwDc4xXeqg",
+          "commit": {
+            "abbreviatedOid": "96a7d6c"
+          },
+          "author": "evansrg",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-12-09T21:56:17Z",
+          "updatedAt": "2021-12-09T21:56:18Z",
+          "comments": [
+            {
+              "originalPosition": 56,
+              "body": "Reverted",
+              "createdAt": "2021-12-09T21:56:18Z",
+              "updatedAt": "2021-12-09T21:56:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGdgwDc4xXg3c",
+          "commit": {
+            "abbreviatedOid": "85f22fc"
+          },
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-12-09T22:07:32Z",
+          "updatedAt": "2021-12-09T22:07:32Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOGdgwDc4vw8ok",
+      "title": "Rephrase CNAME rules",
+      "url": "https://github.com/bemasc/svcb-dane/pull/3",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-12-13T15:00:47Z",
+      "updatedAt": "2022-01-04T20:33:38Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "10ba733905972c6307cf4016cfe896992a9a0f54",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-cname",
+      "headRefOid": "ffd09c6333cec052cfbb65cb833fc78ef3b62202",
+      "closedAt": "2022-01-04T20:33:36Z",
+      "mergedAt": "2022-01-04T20:33:36Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "c9f0d4fc17e7ae9a08dbfae79fa67dc9359dc90d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGdgwDc4yTgF4",
+          "commit": {
+            "abbreviatedOid": "ffd09c6"
+          },
+          "author": "evansrg",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-01-04T20:25:00Z",
+          "updatedAt": "2022-01-04T20:25:00Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
