@@ -118,7 +118,7 @@ This document only specifies the use of TLSA records when the SVCB records were 
 
 # Examples
 
-The following examples demonstrate Serving Binding interaction with TLSA base domain selection.
+The following examples demonstrate Service Binding interaction with TLSA base domain selection.
 
 All of the RRSets below are assumed fully-secure with all related DNSSEC record types omitted for brevity.
 
