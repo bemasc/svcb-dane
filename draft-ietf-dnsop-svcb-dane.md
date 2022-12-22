@@ -3,7 +3,7 @@ title: "Using Service Bindings with DANE"
 abbrev: "SVCB-DANE"
 category: std
 
-docname: draft-rebs-dnsop-svcb-dane-latest
+docname: draft-ietf-dnsop-svcb-dane-latest
 ipr: trust200902
 area: ops
 workgroup: dnsop
