@@ -17,8 +17,8 @@ pi: [toc, sortrefs, symrefs]
 author:
  -
     name: Benjamin M. Schwartz
-    organization: Google LLC
-    email: bemasc@google.com
+    organization: Meta Platforms, Inc.
+    email: ietf@bemasc.net
  -
     name: Robert Evans
     organization: Google LLC
