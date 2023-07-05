@@ -60,7 +60,7 @@ This draft applies the same logic to SVCB-compatible records.  Specifically, if 
 * The transport prefix MUST be the transport of this connection attempt (possibly influenced by the "alpn" SvcParam).
 * The port prefix MUST be the port number of this connection attempt (possibly influenced by the "port" SvcParam).
 
-If the initial TLSA base domain is the start of a secure CNAME chain, clients MUST first try to use the end of the chain as the TLSA base domain, with fallback to the initial base domain, as described in {{Section 7 of RFC7671}}.
+If the initial TLSA base domain is the start of a secure CNAME chain, clients MUST first try to use the end of the chain as the TLSA base domain, with fallback to the initial base domain, as described in {{Section 7 of RFC7671}}.  However, domain owners SHOULD NOT place a CNAME record on a SVCB TargetName, as this arrangement is unusual, inefficient, and at risk for deprecation in a future revision.
 
 If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA CNAME to complete the resolution of the TLSA record.  (This does not alter the TLSA base domain.)
 
@@ -111,7 +111,7 @@ Service Bindings also enable any third party consumer to publish fixed SvcParams
 
 # Security Considerations
 
-This document specifies the use of TLSA as a property of each connection attempt.  In environments where DANE is optional, this means that the fallback procedure might use DANE for some conection attempts but not others.
+This document specifies the use of TLSA as a property of each connection attempt.  In environments where DANE is optional, this means that the fallback procedure might use DANE for some connection attempts but not others.
 
 This document only specifies the use of TLSA records when the SVCB records were resolved securely.  Use of TLSA records in conjunction with insecurely resolved SVCB records is not safe in general, although there may be some configurations where it is appropriate (e.g. when only opportunistic security is available).
 
