@@ -31,13 +31,13 @@ informative:
 
 --- abstract
 
-Service Binding (SVCB) records introduce a new form of name indirection in DNS.  They also convey information about the endpoint's supported protocols, such as whether QUIC transport is available.  This document specifies how DNS-Based Authentication of Named Entities (DANE) interacts with Service Bindings to secure endpoints, including use of port numbers and QUIC support discovered via SVCB queries.
+Service Binding (SVCB) records introduce a new form of name indirection in DNS.  They also convey information about the endpoint's supported protocols, such as whether QUIC transport is available.  This document specifies how DNS-Based Authentication of Named Entities (DANE) interacts with Service Bindings to secure connections, including use of port numbers and transport protocols discovered via SVCB queries.  The "_quic" transport name label is introduced to distinguish TLSA records for DTLS and QUIC.
 
 --- middle
 
 # Introduction
 
-The DNS-Based Authentication of Named Entities specification {{!RFC7671}} explains how clients locate the TLSA record for a service of interest, starting with knowledge of the service's hostname, transport, and port number.  These are concatenated, forming a name like `_8080._tcp.example.com`.  It also specifies how clients should locate the TLSA records when one or more CNAME records are present, aliasing either the hostname or the initial TLSA query name, and the resulting server names used in TLS.
+The DNS-Based Authentication of Named Entities specification {{!RFC7671}} explains how clients locate the TLSA record for a service of interest, starting with knowledge of the service's hostname, transport, and port number.  These are concatenated, forming a name like `_8080._tcp.example.com`.  It also specifies how clients should locate the TLSA records when one or more CNAME records are present, aliasing either the hostname or the initial TLSA query name, and the resulting server names used in TLS or DTLS.
 
 There are various DNS records other than CNAME that add indirection to the host resolution process, requiring similar specifications.  Thus, {{?RFC7672}} describes how DANE interacts with MX records, and {{?RFC7673}} describes its interaction with SRV records.
 
@@ -112,18 +112,18 @@ dane-central.provider.example.  TLSA  ...
 
 Any DANE certificate usage mode is compatible with SVCB, but the usage guidelines from {{Section 4 of !RFC7671}} continue to apply.
 
-## Accidental pinning
+## Unintended pinning
 
-When a service is used by third-party consumers, DANE allows the consumer to publish records that make claims about the certificates used by the service.  When the service subsequently rotates its TLS keys, DANE authentication will fail for these consumers, resulting in an outage.  Accordingly, zone owners MUST NOT publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.
+As noted in {{Section 6 of !RFC7671}}, DANE encounters operational difficulties when the TLSA record is published by an entity other than the service provider.  For example, a customer might copy the TLSA record into their own zone, rather than publishing an alias to the TLSA record hosted in the service provider's zone.  When the service subsequently rotates its TLS keys, DANE authentication will fail, resulting in an outage for this customer.  Accordingly, zone owners MUST NOT publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.
 
 To prevents the above misconfiguration and ensure that TLS keys can be rotated freely, service operators MAY reject TLS connections whose SNI does not correspond to an approved TLSA base domain.
 
-Service Bindings also enable any third party consumer to publish fixed SvcParams for the service.  This can cause an outage or service degradation if the service makes a backward-incompatible configuration change.  Accordingly, zone owners SHOULD NOT publish SvcParams for a TargetName that they do not control, and service operators should take caution when making incompatible configuration changes.
+Service Bindings also enable any third party consumer to publish fixed SvcParams for the service.  This can cause an outage or service degradation if the service makes a backward-incompatible configuration change.  Accordingly, zone owners should avoid publishing SvcParams for a TargetName that they do not control, and service operators should exercise caution when making incompatible configuration changes.
 
 
 # Security Considerations
 
-This document specifies the use of TLSA as a property of each connection attempt.  In environments where DANE is optional, this means that the fallback procedure might use DANE for some connection attempts but not others.
+The use of TLSA records specified in this document is independent for each SVCB connection attempt.  In environments where DANE is optional, this means that the client might use DANE for some connection attempts but not others when processing a single SVCB RRSet.
 
 This document only specifies the use of TLSA records when all relevant DNS records (including SVCB, TLSA, and CNAME records) were resolved securely.  If any of these resolutions were insecure (as defined in {{Section 4.3 of !RFC4035}}), the client MUST NOT rely on the TLSA record for connection security.  However, if the client would otherwise have used an insecure plaintext transport, it MAY use an insecure resolution result to achieve opportunistic security.
 
@@ -235,7 +235,7 @@ The TLSA QNAME is `_8004._$PROTO1.svc4.example.net` or `_8004._$PROTO2.svc4.exam
 
 # IANA Considerations
 
-IANA is instructed to add the following entry to the "Underscored and Globally Scoped DNS Node Names" registry ({{?RFC8552, Section 4}}):
+IANA is requested to add the following entry to the "Underscored and Globally Scoped DNS Node Names" registry ({{?RFC8552, Section 4}}):
 
 | RR Type | _NODE NAME | Reference       |
 | ------- | ---------- | --------------- |
