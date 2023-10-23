@@ -63,7 +63,7 @@ This document applies the same logic to SVCB-compatible records.  Specifically, 
 
 Resolution security is assessed according to the criteria in {{Section 4.1 of !RFC6698}}.
 
-If the initial TLSA base domain is the start of a secure CNAME chain, clients MUST first try to use the end of the chain as the TLSA base domain, with fallback to the initial base domain, as described in {{Section 7 of RFC7671}}.
+If the initial TLSA base domain is the start of a secure CNAME chain, clients MUST first try to use the end of the chain as the TLSA base domain, with fallback to the initial base domain, as described in {{Section 7 of RFC7671}}.  However, domain owners SHOULD NOT place a CNAME record on a SVCB TargetName, as this arrangement is unusual, inefficient, and at risk for deprecation in a future revision.
 
 If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA CNAME to complete the resolution of the TLSA record.  (This does not alter the TLSA base domain.)
 
@@ -127,6 +127,7 @@ This document specifies the use of TLSA as a property of each connection attempt
 
 This document only specifies the use of TLSA records when all relevant DNS records (including SVCB, TLSA, and CNAME records) were resolved securely.  If any of these resolutions were insecure (as defined in {{Section 4.3 of !RFC4035}}), the client MUST NOT rely on the TLSA record for connection security.  However, if the client would otherwise have used an insecure plaintext transport, it MAY use an insecure resolution result to achieve opportunistic security.
 
+Certain protocols that can run over TLS, such as HTTP/1.0, do not confirm the name of the service after connecting.  With DANE, these protocols are subject to an Unknown Key Share (UKS) attack, in which the client believes it is connecting to the attacker's domain, but is actually connecting to an unaffiliated victim domain {{?I-D.barnes-dane-uks-00}}.  When using a vulnerable protocol with DANE, clients MUST NOT perform any action that modifies persistent server state.  (HTTP/1.1 and later and encrypted DNS are not vulnerable to UKS attacks; see {{uks}}.)
 
 # Examples
 
@@ -242,6 +243,20 @@ IANA is instructed to add the following entry to the "Underscored and Globally S
 | TLSA    | _quic      | (This document) |
 
 --- back
+
+# Unknown Key-Share Attacks {#uks}
+
+When using DANE, a client is vulnerable to an Unknown Key-Share (UKS) attack if it sends a command that can result in a persistent change in server-side state, using a protocol that does not confirm the server's identity.  This section analyzes the vulnerability of some popular protocols to this attack, and indicates any resulting restrictions on their use:
+
+* HTTP/0.9 and HTTP/1.0: **Vulnerable**
+  - Clients MUST only use safe methods such as GET and HEAD.
+  - Use of these protocol versions with DANE is NOT RECOMMENDED.
+* HTTP/1.1 and later: **Not Vulnerable**
+  - The CONNECT method ({{?RFC9110, Section 3.6}}) does not create a persistent change in server state.
+  - All other methods are defended from misdirection attacks by server verification of the `Host` or `:authority` header ({{?RFC9110, Section 7.4}}).
+* DNS over TLS, DTLS, or QUIC {{?RFC7858}}{{?RFC8094}}{{?RFC9250}}: **Not Vulnerable**
+  - The QUERY, STATUS, and NOTIFY OpCodes do not create a persistent change in server state.
+  - The UPDATE OpCode does not rely on TLS for authentication.
 
 # Acknowledgments
 {:numbered="false"}
