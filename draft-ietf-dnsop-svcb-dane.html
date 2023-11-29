@@ -21,13 +21,13 @@
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.11.0
+    platformdirs 4.0.0
     pycountry 22.3.5
     PyYAML 6.0
     requests 2.31.0
     setuptools 67.7.2
     six 1.16.0
-    wcwidth 0.2.8
+    wcwidth 0.2.10
 -->
 <link href="draft-ietf-dnsop-svcb-dane.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1048,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">SVCB-DANE</td>
-<td class="right">October 2023</td>
+<td class="right">November 2023</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz &amp; Evans</td>
-<td class="center">Expires 25 April 2024</td>
+<td class="center">Expires 1 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-10-23" class="published">23 October 2023</time>
+<time datetime="2023-11-29" class="published">29 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-04-25">25 April 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-01">1 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 April 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1357,7 +1357,7 @@ dane-central.provider.example.  TLSA  ...
       </h2>
 <p id="section-6-1">The use of TLSA records specified in this document is independent for each SVCB connection attempt.  In environments where DANE is optional, this means that the client might use DANE for some connection attempts but not others when processing a single SVCB RRSet.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">This document only specifies the use of TLSA records when all relevant DNS records (including SVCB, TLSA, and CNAME records) were resolved securely.  If any of these resolutions were insecure (as defined in <span><a href="https://rfc-editor.org/rfc/rfc4035#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC4035" class="cite xref">RFC4035</a>]</span>), the client <span class="bcp14">MUST NOT</span> rely on the TLSA record for connection security.  However, if the client would otherwise have used an insecure plaintext transport, it <span class="bcp14">MAY</span> use an insecure resolution result to achieve opportunistic security.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<p id="section-6-3">Certain protocols that can run over TLS, such as HTTP/1.0, do not confirm the name of the service after connecting.  With DANE, these protocols are subject to an Unknown Key Share (UKS) attack, in which the client believes it is connecting to the attacker's domain, but is actually connecting to an unaffiliated victim domain <span>[<a href="#I-D.barnes-dane-uks-00" class="cite xref">I-D.barnes-dane-uks-00</a>]</span>.  When using a vulnerable protocol with DANE, clients <span class="bcp14">MUST NOT</span> perform any action that modifies persistent server state.  (HTTP/1.1 and later and encrypted DNS are not vulnerable to UKS attacks; see <a href="#uks" class="auto internal xref">Appendix A</a>.)<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-3">Certain protocols that can run over TLS, such as HTTP/1.0, do not confirm the name of the service after connecting.  With DANE, these protocols are subject to an Unknown Key Share (UKS) attack, in which the client believes it is connecting to the attacker's domain, but is actually connecting to an unaffiliated victim domain <span>[<a href="#I-D.barnes-dane-uks-00" class="cite xref">I-D.barnes-dane-uks-00</a>]</span>.  Clients <span class="bcp14">SHOULD NOT</span> use DANE with vulnerable protocols.  (HTTP/1.1 and later and encrypted DNS are not normally vulnerable to UKS attacks, but see <a href="#uks" class="auto internal xref">Appendix A</a> for some important exceptions.)<a href="#section-6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="examples">
@@ -1580,7 +1580,7 @@ svc4.example.net. SVCB 3 . alpn=foo,bar port=8004
 <dd class="break"></dd>
 <dt id="SVCB">[SVCB]</dt>
       <dd>
-<span class="refAuthor">Schwartz, B. M.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service binding and parameter specification via the DNS (DNS SVCB and HTTPS RRs)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-svcb-https-12</span>, <time datetime="2023-03-11" class="refDate">11 March 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12</a>&gt;</span>. </dd>
+<span class="refAuthor">Schwartz, B. M.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-svcb-https-12</span>, <time datetime="2023-03-11" class="refDate">11 March 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-svcb-https-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1611,9 +1611,17 @@ svc4.example.net. SVCB 3 . alpn=foo,bar port=8004
         <dd>
 <span class="refAuthor">Reddy, T.</span>, <span class="refAuthor">Wing, D.</span>, and <span class="refAuthor">P. Patil</span>, <span class="refTitle">"DNS over Datagram Transport Layer Security (DTLS)"</span>, <span class="seriesInfo">RFC 8094</span>, <span class="seriesInfo">DOI 10.17487/RFC8094</span>, <time datetime="2017-02" class="refDate">February 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8094">https://www.rfc-editor.org/rfc/rfc8094</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8441">[RFC8441]</dt>
+        <dd>
+<span class="refAuthor">McManus, P.</span>, <span class="refTitle">"Bootstrapping WebSockets with HTTP/2"</span>, <span class="seriesInfo">RFC 8441</span>, <span class="seriesInfo">DOI 10.17487/RFC8441</span>, <time datetime="2018-09" class="refDate">September 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8441">https://www.rfc-editor.org/rfc/rfc8441</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8552">[RFC8552]</dt>
         <dd>
 <span class="refAuthor">Crocker, D.</span>, <span class="refTitle">"Scoped Interpretation of DNS Resource Records through "Underscored" Naming of Attribute Leaves"</span>, <span class="seriesInfo">BCP 222</span>, <span class="seriesInfo">RFC 8552</span>, <span class="seriesInfo">DOI 10.17487/RFC8552</span>, <time datetime="2019-03" class="refDate">March 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8552">https://www.rfc-editor.org/rfc/rfc8552</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9103">[RFC9103]</dt>
+        <dd>
+<span class="refAuthor">Toorop, W.</span>, <span class="refAuthor">Dickinson, S.</span>, <span class="refAuthor">Sahib, S.</span>, <span class="refAuthor">Aras, P.</span>, and <span class="refAuthor">A. Mankin</span>, <span class="refTitle">"DNS Zone Transfer over TLS"</span>, <span class="seriesInfo">RFC 9103</span>, <span class="seriesInfo">DOI 10.17487/RFC9103</span>, <time datetime="2021-08" class="refDate">August 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9103">https://www.rfc-editor.org/rfc/rfc9103</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9110">[RFC9110]</dt>
         <dd>
@@ -1632,38 +1640,69 @@ svc4.example.net. SVCB 3 . alpn=foo,bar port=8004
       <h2 id="name-unknown-key-share-attacks">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-unknown-key-share-attacks" class="section-name selfRef">Unknown Key-Share Attacks</a>
       </h2>
-<p id="appendix-A-1">When using DANE, a client is vulnerable to an Unknown Key-Share (UKS) attack if it sends a command that can result in a persistent change in server-side state, using a protocol that does not confirm the server's identity.  This section analyzes the vulnerability of some popular protocols to this attack, and indicates any resulting restrictions on their use:<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">In the Unknown Key-Share (UKS) Attack <span>[<a href="#I-D.barnes-dane-uks-00" class="cite xref">I-D.barnes-dane-uks-00</a>]</span>, a hostile domain ("attacker.example") claims the IP addresses and TLSA records of another domain ("victim.example").  A client who attempts to connect to "attacker.example" will actually be connecting to "victim.example".<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">The client then sends some commands or requests over this connection.  If the server rejects these requests, or if the attacker could have forwarded these requests itself, the attack confers no advantage.  However, if the client issues commands that the attacker could not have issued, and the victim does not ignore these requests, then the attack could change state at the victim server, reveal confidential information to the attacker (e.g., via same-origin data sharing in the client), or waste resources.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">Here are some examples of requests that the attacker likely could not have issued themselves:<a href="#appendix-A-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-2.1">
-          <p id="appendix-A-2.1.1">HTTP/0.9 and HTTP/1.0: <strong>Vulnerable</strong><a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="appendix-A-2.1.2.1">
-              <p id="appendix-A-2.1.2.1.1">Clients <span class="bcp14">MUST</span> only use safe methods such as GET and HEAD.<a href="#appendix-A-2.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-4.1">
+          <p id="appendix-A-4.1.1">Requests authenticated using a TLS Client Certificate or other credential that is bound to the connection but not the domain.<a href="#appendix-A-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="appendix-A-2.1.2.2">
-              <p id="appendix-A-2.1.2.2.1">Use of these protocol versions with DANE is <span class="bcp14">NOT RECOMMENDED</span>.<a href="#appendix-A-2.1.2.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-4.2">
+          <p id="appendix-A-4.2.1">Requests that are only permitted if they appear to come from a particular IP range.<a href="#appendix-A-4.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-5">This section lists some protocols that can be used with SVCB, analyzes their vulnerability to this attack, and indicates any resulting restrictions on their use:<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.1">
+          <p id="appendix-A-6.1.1">HTTP/0.9 and HTTP/1.0: <strong>Vulnerable</strong><a href="#appendix-A-6.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.1.2.1">
+              <p id="appendix-A-6.1.2.1.1">Clients <span class="bcp14">MUST NOT</span> use TLS Client Authentication with DANE and these protocol versions.<a href="#appendix-A-6.1.2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.1.2.1.2.1">
+                  <p id="appendix-A-6.1.2.1.2.1.1">Example attack: "https://attacker.example/" fetches "/profile" in Javascript.  The second request is directed to "victim.example" and authenticated by a client certificate, revealing the user's profile to the attacker.<a href="#appendix-A-6.1.2.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</li>
+            <li class="normal" id="appendix-A-6.1.2.2">
+              <p id="appendix-A-6.1.2.2.1">Use of these protocol versions with DANE is <span class="bcp14">NOT RECOMMENDED</span>.<a href="#appendix-A-6.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
-        <li class="normal" id="appendix-A-2.2">
-          <p id="appendix-A-2.2.1">HTTP/1.1 and later: <strong>Not Vulnerable</strong><a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-6.2">
+          <p id="appendix-A-6.2.1">HTTP/1.1 and later: <strong>Slightly Vulnerable</strong><a href="#appendix-A-6.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-2.2.2.1">
-              <p id="appendix-A-2.2.2.1.1">The CONNECT method (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-3.6" class="relref">Section 3.6</a></span>) does not create a persistent change in server state.<a href="#appendix-A-2.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-6.2.2.1">
+              <p id="appendix-A-6.2.2.1.1">The CONNECT method (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-3.6" class="relref">Section 3.6</a></span>) <span class="bcp14">MUST NOT</span> be used on a connection authenticated with DANE.<a href="#appendix-A-6.2.2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.2.2.1.2.1">
+                  <p id="appendix-A-6.2.2.1.2.1.1">Example attack: "attacker.example" advertises a CONNECT proxy service to existing customers of the "victim.example" proxy, which is access-controlled by client IP.  To reduce its own operating costs, "attacker.example" uses UKS to send users back to "victim.example", resulting in the attacker's service appearing to work but silently consuming clients' transfer quota on "victim.example".<a href="#appendix-A-6.2.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="appendix-A-2.2.2.2">
-              <p id="appendix-A-2.2.2.2.1">All other methods are defended from misdirection attacks by server verification of the <code>Host</code> or <code>:authority</code> header (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-7.4" class="relref">Section 7.4</a></span>).<a href="#appendix-A-2.2.2.2.1" class="pilcrow">¶</a></p>
+              </ul>
+</li>
+            <li class="normal" id="appendix-A-6.2.2.2">
+              <p id="appendix-A-6.2.2.2.1">Clients <span class="bcp14">MAY</span> use all other methods with DANE, including Extended CONNECT <span>[<a href="#RFC8441" class="cite xref">RFC8441</a>]</span>.  These methods are defended from misdirection attacks by server verification of the <code>Host</code> or <code>:authority</code> header (<span>[<a href="#RFC9110" class="cite xref">RFC9110</a>], <a href="https://rfc-editor.org/rfc/rfc9110#section-7.4" class="relref">Section 7.4</a></span>).<a href="#appendix-A-6.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
-        <li class="normal" id="appendix-A-2.3">
-          <p id="appendix-A-2.3.1">DNS over TLS, DTLS, or QUIC <span>[<a href="#RFC7858" class="cite xref">RFC7858</a>]</span><span>[<a href="#RFC8094" class="cite xref">RFC8094</a>]</span><span>[<a href="#RFC9250" class="cite xref">RFC9250</a>]</span>: <strong>Not Vulnerable</strong><a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-A-6.3">
+          <p id="appendix-A-6.3.1">DNS over TLS, DTLS, or QUIC <span>[<a href="#RFC7858" class="cite xref">RFC7858</a>]</span><span>[<a href="#RFC8094" class="cite xref">RFC8094</a>]</span><span>[<a href="#RFC9250" class="cite xref">RFC9250</a>]</span>:<a href="#appendix-A-6.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-2.3.2.1">
-              <p id="appendix-A-2.3.2.1.1">The QUERY, STATUS, and NOTIFY OpCodes do not create a persistent change in server state.<a href="#appendix-A-2.3.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-A-6.3.2.1">
+              <p id="appendix-A-6.3.2.1.1">For resolution: <strong>Not Vulnerable</strong><a href="#appendix-A-6.3.2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.3.2.1.2.1">
+                  <p id="appendix-A-6.3.2.1.2.1.1">DNS resolution does not change state at the server, reveal confidential information to the attacker, or waste significant resources.<a href="#appendix-A-6.3.2.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="appendix-A-2.3.2.2">
-              <p id="appendix-A-2.3.2.2.1">The UPDATE OpCode does not rely on TLS for authentication.<a href="#appendix-A-2.3.2.2.1" class="pilcrow">¶</a></p>
+              </ul>
+</li>
+            <li class="normal" id="appendix-A-6.3.2.2">
+              <p id="appendix-A-6.3.2.2.1">For other uses: <strong>Mitigation Required</strong><a href="#appendix-A-6.3.2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.3.2.2.2.1">
+                  <p id="appendix-A-6.3.2.2.2.1.1">When using DNS for other purposes such as zone transfers <span>[<a href="#RFC9103" class="cite xref">RFC9103</a>]</span>, clients relying on DANE for server authentication <span class="bcp14">MUST NOT</span> use a client certificate that is authorized by multiple potentially hostile servers.<a href="#appendix-A-6.3.2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
 </li>
           </ul>
 </li>
