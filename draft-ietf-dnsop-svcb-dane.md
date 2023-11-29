@@ -65,7 +65,7 @@ Resolution security is assessed according to the criteria in {{Section 4.1 of !R
 
 If the initial TLSA base domain is the start of a secure CNAME chain, clients MUST first try to use the end of the chain as the TLSA base domain, with fallback to the initial base domain, as described in {{Section 7 of RFC7671}}.  However, domain owners SHOULD NOT place a CNAME record on a SVCB TargetName, as this arrangement is unusual, inefficient, and at risk for deprecation in a future revision.
 
-If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA CNAME to complete the resolution of the TLSA record.  (This does not alter the TLSA base domain.)
+If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA CNAME to complete the resolution of the TLSA records.  (This does not alter the TLSA base domain.)
 
 If a TLSA RRSet is securely resolved, the client MUST set the SNI to the TLSA base domain of the RRSet.  In usage modes other than DANE-EE(3), the client MUST validate that the certificate covers this base domain, and MUST NOT require it to cover any other domain.
 
@@ -74,11 +74,11 @@ If the client has SVCB-optional behavior (as defined in {{Section 3 of SVCB}}), 
 
 # Adding a TLSA protocol prefix for QUIC {#protocols}
 
-{{Section 3 of !RFC6698}} defined the protocol prefix used for constructing TLSA QNAMEs, and said:
+{{Section 3 of !RFC6698}} defines the protocol prefix used for constructing TLSA QNAMEs, and says:
 
 > The transport names defined for this protocol are "tcp", "udp", and "sctp".
 
-At that time, there was exactly one TLS-based protocol defined for each of these transports.  However, with the introduction of QUIC {{!RFC9000}}, there are now multiple TLS-derived protocols that can operate over UDP, even on the same port.  To distinguish the availability and configuration of DTLS and QUIC, this document updates the above sentence as follows:
+When this text was written, there was exactly one TLS-based protocol defined for each of these transports.  However, with the introduction of QUIC {{!RFC9000}}, there are now multiple TLS-derived protocols that can operate over UDP, even on the same port.  To distinguish the availability and configuration of DTLS and QUIC, this document updates the above sentence as follows:
 
 > The transport names defined for this protocol are "tcp" (TLS over TCP {{!RFC8446}}), "udp" (DTLS {{!RFC9147}}), "sctp" (TLS over SCTP {{!RFC3436}}), and "quic" (QUIC {{!RFC9000}}).
 
@@ -114,7 +114,7 @@ Any DANE certificate usage mode is compatible with SVCB, but the usage guideline
 
 ## Unintended pinning
 
-As noted in {{Section 6 of !RFC7671}}, DANE encounters operational difficulties when the TLSA record is published by an entity other than the service provider.  For example, a customer might copy the TLSA record into their own zone, rather than publishing an alias to the TLSA record hosted in the service provider's zone.  When the service subsequently rotates its TLS keys, DANE authentication will fail, resulting in an outage for this customer.  Accordingly, zone owners MUST NOT publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.
+As noted in {{Section 6 of !RFC7671}}, DANE encounters operational difficulties when the TLSA RRset is published by an entity other than the service provider.  For example, a customer might copy the TLSA records into their own zone, rather than publishing an alias to the TLSA RRset hosted in the service provider's zone.  When the service subsequently rotates its TLS keys, DANE authentication will fail, resulting in an outage for this customer.  Accordingly, zone owners MUST NOT publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.
 
 To prevents the above misconfiguration and ensure that TLS keys can be rotated freely, service operators MAY reject TLS connections whose SNI does not correspond to an approved TLSA base domain.
 
