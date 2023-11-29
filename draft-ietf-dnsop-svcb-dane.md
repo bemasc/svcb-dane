@@ -127,7 +127,7 @@ The use of TLSA records specified in this document is independent for each SVCB 
 
 This document only specifies the use of TLSA records when all relevant DNS records (including SVCB, TLSA, and CNAME records) were resolved securely.  If any of these resolutions were insecure (as defined in {{Section 4.3 of !RFC4035}}), the client MUST NOT rely on the TLSA record for connection security.  However, if the client would otherwise have used an insecure plaintext transport, it MAY use an insecure resolution result to achieve opportunistic security.
 
-Certain protocols that can run over TLS, such as HTTP/1.0, do not confirm the name of the service after connecting.  With DANE, these protocols are subject to an Unknown Key Share (UKS) attack, in which the client believes it is connecting to the attacker's domain, but is actually connecting to an unaffiliated victim domain {{?I-D.barnes-dane-uks-00}}.  When using a vulnerable protocol with DANE, clients MUST NOT perform any action that modifies persistent server state.  (HTTP/1.1 and later and encrypted DNS are not vulnerable to UKS attacks; see {{uks}}.)
+Certain protocols that can run over TLS, such as HTTP/1.0, do not confirm the name of the service after connecting.  With DANE, these protocols are subject to an Unknown Key Share (UKS) attack, in which the client believes it is connecting to the attacker's domain, but is actually connecting to an unaffiliated victim domain {{?I-D.barnes-dane-uks-00}}.  Clients SHOULD NOT use DANE with vulnerable protocols.  (HTTP/1.1 and later and encrypted DNS are not normally vulnerable to UKS attacks, but see {{uks}} for some important exceptions.)
 
 # Examples
 
@@ -246,17 +246,30 @@ IANA is requested to add the following entry to the "Underscored and Globally Sc
 
 # Unknown Key-Share Attacks {#uks}
 
-When using DANE, a client is vulnerable to an Unknown Key-Share (UKS) attack if it sends a command that can result in a persistent change in server-side state, using a protocol that does not confirm the server's identity.  This section analyzes the vulnerability of some popular protocols to this attack, and indicates any resulting restrictions on their use:
+In the Unknown Key-Share (UKS) Attack {{?I-D.barnes-dane-uks-00}}, a hostile domain ("attacker.example") claims the IP addresses and TLSA records of another domain ("victim.example").  A client who attempts to connect to "attacker.example" will actually be connecting to "victim.example".
+
+The client then sends some commands or requests over this connection.  If the server rejects these requests, or if the attacker could have forwarded these requests itself, the attack confers no advantage.  However, if the client issues commands that the attacker could not have issued, and the victim does not ignore these requests, then the attack could change state at the victim server, reveal confidential information to the attacker (e.g., via same-origin data sharing in the client), or waste resources.
+
+Here are some examples of requests that the attacker likely could not have issued themselves:
+
+* Requests authenticated using a TLS Client Certificate or other credential that is bound to the connection but not the domain.
+* Requests that are only permitted if they appear to come from a particular IP range.
+
+This section lists some protocols that can be used with SVCB, analyzes their vulnerability to this attack, and indicates any resulting restrictions on their use:
 
 * HTTP/0.9 and HTTP/1.0: **Vulnerable**
-  - Clients MUST only use safe methods such as GET and HEAD.
+  - Clients MUST NOT use TLS Client Authentication with DANE and these protocol versions.
+    - Example attack: "https://attacker.example/" fetches "/profile" in Javascript.  The second request is directed to "victim.example" and authenticated by a client certificate, revealing the user's profile to the attacker.
   - Use of these protocol versions with DANE is NOT RECOMMENDED.
-* HTTP/1.1 and later: **Not Vulnerable**
-  - The CONNECT method ({{?RFC9110, Section 3.6}}) does not create a persistent change in server state.
-  - All other methods are defended from misdirection attacks by server verification of the `Host` or `:authority` header ({{?RFC9110, Section 7.4}}).
-* DNS over TLS, DTLS, or QUIC {{?RFC7858}}{{?RFC8094}}{{?RFC9250}}: **Not Vulnerable**
-  - The QUERY, STATUS, and NOTIFY OpCodes do not create a persistent change in server state.
-  - The UPDATE OpCode does not rely on TLS for authentication.
+* HTTP/1.1 and later: **Slightly Vulnerable**
+  - The CONNECT method ({{?RFC9110, Section 3.6}}) MUST NOT be used on a connection authenticated with DANE.
+    - Example attack: "attacker.example" advertises a CONNECT proxy service to existing customers of the "victim.example" proxy, which is access-controlled by client IP.  To reduce its own operating costs, "attacker.example" uses UKS to send users back to "victim.example", resulting in the attacker's service appearing to work but silently consuming clients' transfer quota on "victim.example".
+  - Clients MAY use all other methods with DANE, including Extended CONNECT {{?RFC8441}}.  These methods are defended from misdirection attacks by server verification of the `Host` or `:authority` header ({{?RFC9110, Section 7.4}}).
+* DNS over TLS, DTLS, or QUIC {{?RFC7858}}{{?RFC8094}}{{?RFC9250}}:
+  - For resolution: **Not Vulnerable**
+    - DNS resolution does not change state at the server, reveal confidential information to the attacker, or waste significant resources.
+  - For other uses: **Mitigation Required**
+    - When using DNS for other purposes such as zone transfers {{?RFC9103}}, clients relying on DANE for server authentication MUST NOT use a client certificate that is authorized by multiple potentially hostile servers.
 
 # Acknowledgments
 {:numbered="false"}
