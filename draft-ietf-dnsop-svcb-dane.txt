@@ -157,7 +157,7 @@ Table of Contents
    inefficient, and at risk for deprecation in a future revision.
 
    If any TLSA QNAME is aliased by a CNAME, clients MUST follow the TLSA
-   CNAME to complete the resolution of the TLSA record.  (This does not
+   CNAME to complete the resolution of the TLSA records.  (This does not
    alter the TLSA base domain.)
 
    If a TLSA RRSet is securely resolved, the client MUST set the SNI to
@@ -171,16 +171,16 @@ Table of Contents
 
 4.  Adding a TLSA protocol prefix for QUIC
 
-   Section 3 of [RFC6698] defined the protocol prefix used for
-   constructing TLSA QNAMEs, and said:
+   Section 3 of [RFC6698] defines the protocol prefix used for
+   constructing TLSA QNAMEs, and says:
 
       The transport names defined for this protocol are "tcp", "udp",
       and "sctp".
 
-   At that time, there was exactly one TLS-based protocol defined for
-   each of these transports.  However, with the introduction of QUIC
-   [RFC9000], there are now multiple TLS-derived protocols that can
-   operate over UDP, even on the same port.  To distinguish the
+   When this text was written, there was exactly one TLS-based protocol
+   defined for each of these transports.  However, with the introduction
+   of QUIC [RFC9000], there are now multiple TLS-derived protocols that
+   can operate over UDP, even on the same port.  To distinguish the
    availability and configuration of DTLS and QUIC, this document
    updates the above sentence as follows:
 
@@ -220,15 +220,15 @@ Table of Contents
 5.2.  Unintended pinning
 
    As noted in Section 6 of [RFC7671], DANE encounters operational
-   difficulties when the TLSA record is published by an entity other
-   than the service provider.  For example, a customer might copy the
-   TLSA record into their own zone, rather than publishing an alias to
-   the TLSA record hosted in the service provider's zone.  When the
-   service subsequently rotates its TLS keys, DANE authentication will
-   fail, resulting in an outage for this customer.  Accordingly, zone
-   owners MUST NOT publish TLSA records for public keys that are not
-   under their control unless they have an explicit arrangement with the
-   key holder.
+   difficulties when the TLSA RRset is published by an entity other than
+   the service provider.  For example, a customer might copy the TLSA
+   records into their own zone, rather than publishing an alias to the
+   TLSA RRset hosted in the service provider's zone.  When the service
+   subsequently rotates its TLS keys, DANE authentication will fail,
+   resulting in an outage for this customer.  Accordingly, zone owners
+   MUST NOT publish TLSA records for public keys that are not under
+   their control unless they have an explicit arrangement with the key
+   holder.
 
    To prevents the above misconfiguration and ensure that TLS keys can
    be rotated freely, service operators MAY reject TLS connections whose
