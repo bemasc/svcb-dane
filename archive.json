@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-05T01:11:48.465205+00:00",
+  "timestamp": "2023-11-30T01:10:00.656324+00:00",
   "repo": "bemasc/svcb-dane",
   "labels": [
     {
@@ -122,15 +122,15 @@
       "id": "I_kwDOGdgwDc51tYRz",
       "title": "Unknown Key-Share attacks in a browser context",
       "url": "https://github.com/bemasc/svcb-dane/issues/12",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "bemasc",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "I think the UKS section might need a tweak to address the browser context: if the attacker can fool the browser into thinking that victim.example is attacker.example, it might be able to retrieve confidential resources and then access them from JS via the same-origin policy.\r\n\r\nThe conclusion is not really changed but the analysis is slightly different.",
       "createdAt": "2023-11-02T18:30:17Z",
-      "updatedAt": "2023-11-02T18:30:17Z",
-      "closedAt": null,
+      "updatedAt": "2023-11-29T16:54:06Z",
+      "closedAt": "2023-11-29T16:54:06Z",
       "comments": []
     }
   ],
