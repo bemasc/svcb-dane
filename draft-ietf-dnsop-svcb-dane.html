@@ -27,7 +27,7 @@
     requests 2.31.0
     setuptools 67.7.2
     six 1.16.0
-    wcwidth 0.2.10
+    wcwidth 0.2.12
 -->
 <link href="draft-ietf-dnsop-svcb-dane.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1048,11 +1048,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">SVCB-DANE</td>
-<td class="right">November 2023</td>
+<td class="right">December 2023</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz &amp; Evans</td>
-<td class="center">Expires 1 June 2024</td>
+<td class="center">Expires 6 June 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-29" class="published">29 November 2023</time>
+<time datetime="2023-12-04" class="published">4 December 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-01">1 June 2024</time></dd>
+<dd class="expires"><time datetime="2024-06-06">6 June 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1119,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1344,7 +1344,7 @@ dane-central.provider.example.  TLSA  ...
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-unintended-pinning" class="section-name selfRef">Unintended pinning</a>
         </h3>
 <p id="section-5.2-1">As noted in <span><a href="https://rfc-editor.org/rfc/rfc7671#section-6" class="relref">Section 6</a> of [<a href="#RFC7671" class="cite xref">RFC7671</a>]</span>, DANE encounters operational difficulties when the TLSA RRset is published by an entity other than the service provider.  For example, a customer might copy the TLSA records into their own zone, rather than publishing an alias to the TLSA RRset hosted in the service provider's zone.  When the service subsequently rotates its TLS keys, DANE authentication will fail, resulting in an outage for this customer.  Accordingly, zone owners <span class="bcp14">MUST NOT</span> publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">To prevents the above misconfiguration and ensure that TLS keys can be rotated freely, service operators <span class="bcp14">MAY</span> reject TLS connections whose SNI does not correspond to an approved TLSA base domain.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">To prevent the above misconfiguration and ensure that TLS keys can be rotated freely, service operators <span class="bcp14">MAY</span> reject TLS connections whose SNI does not correspond to an approved TLSA base domain.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <p id="section-5.2-3">Service Bindings also enable any third party consumer to publish fixed SvcParams for the service.  This can cause an outage or service degradation if the service makes a backward-incompatible configuration change.  Accordingly, zone owners should avoid publishing SvcParams for a TargetName that they do not control, and service operators should exercise caution when making incompatible configuration changes.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
