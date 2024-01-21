@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-11-30T01:10:00.656324+00:00",
+  "timestamp": "2024-01-21T01:16:48.683870+00:00",
   "repo": "bemasc/svcb-dane",
   "labels": [
     {
@@ -389,13 +389,11 @@
       "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "OWNER",
-      "assignees": [
-        "evansrg"
-      ],
+      "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-07-05T15:46:35Z",
-      "updatedAt": "2023-10-23T19:55:55Z",
+      "updatedAt": "2024-01-19T22:34:42Z",
       "baseRepository": "bemasc/svcb-dane",
       "baseRefName": "main",
       "baseRefOid": "3c0385fc9e29114ee969cab6390169868eb52347",
@@ -419,13 +417,11 @@
       "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "OWNER",
-      "assignees": [
-        "evansrg"
-      ],
+      "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2023-07-05T18:28:49Z",
-      "updatedAt": "2023-10-23T19:56:12Z",
+      "updatedAt": "2024-01-19T22:34:42Z",
       "baseRepository": "bemasc/svcb-dane",
       "baseRefName": "main",
       "baseRefOid": "3c0385fc9e29114ee969cab6390169868eb52347",
@@ -449,13 +445,11 @@
       "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "OWNER",
-      "assignees": [
-        "evansrg"
-      ],
+      "assignees": [],
       "labels": [],
       "body": "Fixes #8",
       "createdAt": "2023-08-03T17:10:29Z",
-      "updatedAt": "2023-10-23T19:58:59Z",
+      "updatedAt": "2024-01-19T22:34:42Z",
       "baseRepository": "bemasc/svcb-dane",
       "baseRefName": "main",
       "baseRefOid": "853c7894dff97d10be0f2a15eae9df1df0ddf774",
@@ -479,13 +473,11 @@
       "state": "MERGED",
       "author": "bemasc",
       "authorAssociation": "OWNER",
-      "assignees": [
-        "evansrg"
-      ],
+      "assignees": [],
       "labels": [],
       "body": "Fixes #9",
       "createdAt": "2023-08-03T18:55:54Z",
-      "updatedAt": "2023-10-23T20:00:30Z",
+      "updatedAt": "2024-01-19T22:34:43Z",
       "baseRepository": "bemasc/svcb-dane",
       "baseRefName": "main",
       "baseRefOid": "46996cbb79a2fa7b3d4e9673a8ccdb6dc3148cd4",
