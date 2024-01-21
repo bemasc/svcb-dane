@@ -1,0 +1,497 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-01-21T01:16:48.683870+00:00",
+  "repo": "bemasc/svcb-dane",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 5,
+      "id": "I_kwDOGdgwDc5Vdwte",
+      "title": "Relation to HTTP Alt-Svc headers and certificate subjects",
+      "url": "https://github.com/bemasc/svcb-dane/issues/5",
+      "state": "CLOSED",
+      "author": "Saklad5",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "https://github.com/bemasc/svcb-dane/blob/6e945bef3591b06355327f17117aec4169db1cc6/draft-rebs-dnsop-svcb-dane.md?plain=1#L67\r\n\r\nIf I understand this draft correctly, that means that the client following a PKIX-EE record does **not** ask for a certificate with the name of the origin, but instead asks for a certificate with the name of the endpoint.\r\n\r\nDoes this mean that a DANE-compatible client will require distinct certificates depending on whether they use Alt-Svc or HTTPS records to locate the endpoint?\r\n\r\n---\r\n\r\nConsider the following (DNSSEC-validated) records:\r\n\r\n```DNS\r\nendpoint.example.               86400\tIN\tAAAA\t2001:db8::\r\n_443._tcp.endpoint.example.\t86400\tIN\tTLSA\t1 1 1 [endpoint keys]\r\norigin.example.                 86400\tIN\tAAAA\t2001:db8::1\r\norigin.example.\t\t        86400\tIN\tHTTPS\t1 endpoint.example.\r\n_443._tcp.origin.example.\t86400\tIN\tTLSA\t1 1 1 [origin keys]\r\n```\r\n\r\nA client that does not support HTTPS records might connect to `origin.example` directly, using an SNI of `origin.example` and comparing it to the TLSA record at `_443._tcp.origin.example`. The response could include the header `Alt-Svc: http/1.1=\"endpoint.example.com:443\"`.\r\n\r\nA subsequent request might be directed at `endpoint.example`, with the same SNI and TLSA record (based on [RFC 7838](https://www.rfc-editor.org/info/rfc7838)). Thus, no certificate for `endpoint.example` is requested or needed.\r\n\r\nIn contrast, a client that supports HTTPS records would connect to `endpoint.example`, using an SNI of `endpoint.example` and comparing it to the TLSA record at `_443._tcp.endpoint.example`. This means that a certificate for `endpoint.example` *is* required, and a certificate for `origin.example` is never used.\r\n\r\n---\r\n\r\nIs this the intended behavior? It strikes me as rather confusing, if so: an example explicitly demonstrating this would be welcome. Alt-Svc headers and HTTPS records are equivalent in most respects, so such a divergence is worth noting.",
+      "createdAt": "2022-11-02T22:21:15Z",
+      "updatedAt": "2022-11-03T15:47:38Z",
+      "closedAt": "2022-11-03T13:47:13Z",
+      "comments": [
+        {
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "body": "> Does this mean that a DANE-compatible client will require distinct certificates depending on whether they use Alt-Svc or HTTPS records to locate the endpoint?\r\n\r\nDANE for HTTP is not implemented anywhere, to my knowledge, and [might even be insecure](https://datatracker.ietf.org/doc/html/draft-barnes-dane-uks-00).  I don't think anyone has figured out how DANE would work with Alt-Svc.  This draft doesn't change that.  Also, Alt-Svc is [falling out of favor](https://lists.w3.org/Archives/Public/ietf-http-wg/2022OctDec/0062.html) and may be headed for deprecation.\r\n\r\nI don't think this draft should try to address HTTP Alt-Svc.  I suspect the right answer is that DANE and Alt-Svc are not compatible ... but this is a moot point, because nobody uses DANE with HTTP, and Alt-Svc seems to be on its way out.",
+          "createdAt": "2022-11-03T13:47:13Z",
+          "updatedAt": "2022-11-03T13:47:13Z"
+        },
+        {
+          "author": "Saklad5",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> DANE for HTTP is not implemented anywhere, to my knowledge, and [might even be insecure](https://datatracker.ietf.org/doc/html/draft-barnes-dane-uks-00).\r\n\r\nI'd like to see DANE for HTTP accrue support eventually. Certificate Transparency is a good solution, but it isn't suitable for everything. DANE also has the advantage of being relatively easy for resource-constrained clients to implement.\r\n\r\nI use PKIX-EE records by default, at least for certificates that would pass it anyway. They avoid the issue described in that expired Internet Draft, such as it is. I'm not convinced that actually constitutes an attack, so much as a reverse proxy.",
+          "createdAt": "2022-11-03T15:47:38Z",
+          "updatedAt": "2022-11-03T15:47:38Z"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOGdgwDc5rgoyv",
+      "title": "DNSDIR Review Notes",
+      "url": "https://github.com/bemasc/svcb-dane/issues/8",
+      "state": "CLOSED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "bemasc"
+      ],
+      "labels": [],
+      "body": "Credit: Patrick Mevzek\r\n\r\n*\r\n\r\nIt updates 6698, but it also focuses mostly on operational issues/guidance,\r\nwhich is what 7671 is about, so maybe it should also be marked as updating 7671\r\nin addition of 6698?\r\n\r\n*\r\n\r\nSection 1.\r\n\r\n\u2014 Nit: `_8080._tcp.example.com.` does not appear in specific \u201ccode\u201d font in\r\nHTML output of draft, while other names later in document do, so I guess just a\r\nformatting change.\r\n\r\n\u2014 Potentially use \u201cTLSA records\u201d (plural) in various places instead of \u201cthe\r\nTLSA record\u201d as this gives the impression there can be only one.\r\n\r\n\u2014 Introduction says the document does two things: giving details using DANE\r\nwith SVCB and also how to use DANE with QUIC. However, neither the document\r\ntitle nor the abstract of it mention QUIC, only SVCB is mentioned. If the\r\ndocument does both, perhaps both points should be clearly listed early on\r\n(title + abstract), or otherwise (as SVCB and QUIC are fairly distinct things\r\nin my view), it should be split in two documents, each one focusing on one\r\npoint only.\r\n\r\n*\r\n\r\nSection 3\r\n\r\n\u2014 name of section: I would suggest using SVCB specifically instead of Service\r\nBindings Same for title and abstract of document in fact.\r\n\r\n\u2014 s/This draft applies/This document applies/ (or specification, or other\r\nterms, but not \u201cdraft\u201d) Maybe other occurrences of \u201cdraft\u201d later on should be\r\nreplaced as well.\r\n\r\n\u2014 \u201cif SVCB resolution was entirely secure\u201d : maybe mentioning it once that\r\nsecure here means with DNSSEC along all the paths (DNS answers) taken? Or\r\npointing to somewhere where secure is defined (maybe: \u00a74.1 of RFC6698?)\r\n\r\n\u2014 \u201cIn usage modes other than DANE-EE(3)\u201d: shouldn't that also include DANE-TA\r\ncase at same level than DANE-EE?\r\n\r\n\u2014 section 3\r\n\u201cSection 6 of [RFC7671] says:\u201d (present)\r\nvs section 4\r\n\u201cSection 3 of [RFC6698] defined the protocol prefix used for constructing TLSA\r\nQNAMEs, and said:\u201d (past)\r\n\r\nI suggest using either present or past tense in both cases, as the intent is\r\nthe same (redefining something coming from elsewhere)\r\n\r\n*\r\n\r\nSection 4\r\n\r\n\u2014 name of section: I would make sure to list QUIC explicitly, otherwise seems\r\ntoo generic\r\n\r\n\u2014 \u201cthis draft Updates the above sentence as follows:\u201d\r\n\r\nReplace \u201cdraft\u201d by document or equivalent and lowercase \u201cUpdates\u201d.\r\n\r\n\u2014 \u201cudp\u201d (DTLS [I-D.draft-ietf-tls-dtls13])\r\nShouldn't that instead reference by RFC9147 \u201cThe Datagram Transport Layer\r\nSecurity (DTLS) Protocol Version 1.3\u201d?\r\n\r\n*\r\n\r\nSection 5.1\r\n\r\n\u2014 Please replace examples of `alias.net`, `provider.com` with things under\r\n`.example` TLD.\r\n\r\n\u2014 \u201cTLSA  <provider keys>\u201d Why plural? Possibly just ellipse the whole <> part,\r\nas it could be a hash too, etc.\r\n\r\n\u2014 \u201cService consumers are expected to use CNAME or SVCB AliasMode\u201d, yet the\r\nexample given is using only HTTPS record and not SVCB record. Maybe use\r\nmultiple examples?\r\n\r\n\u2014 Perhaps add that this works mostly for DANE-EE and DANE-TA use cases?\r\n\r\n*\r\n\r\nSection 6\r\n\r\n\u2014 \u201cmight use DANE for some conection\u201d => connection\r\n\r\n\u2014 While not having actual element to provide, I feel the section to be a little\r\ntoo simple and specially the last paragraph, saying basically \u201cinsecurely\r\nresolved is not safe\u201d, without giving guidance or at least detailing the\r\ntradeoffs between various possible scenarios (ignoring unsecure results,\r\ncontinue, etc.)\r\n\r\n*\r\n\r\nSection 7\r\n\r\n\u2014 make sure all examples use IETF reserved names for hostnames (ex:\r\n`example-cdn.com` => `cdn-foobar42.example`)\r\n\r\n\u2014 \u201c7.3. QUIC and CNAME\u201d, not sure what the record on `https://urldefense.com/v3/__http://www.example.com__;!!Bt8RZUm9aw!758lq070UDFG11STHGAG_isoz527_V1hsvhefnUuCdQdJXFOI8N_cc-LKCrnJfhLu0iX3qBp6aA$ ` is\r\nuseful for? Or the URI should be `https://urldefense.com/v3/__https://www.example.com/*60?__;JQ!!Bt8RZUm9aw!758lq070UDFG11STHGAG_isoz527_V1hsvhefnUuCdQdJXFOI8N_cc-LKCrnJfhLu0iXjPBZQAo$\r\n\r\n\u2014 \u201c7.7. DNS ServiceMode\u201d: perhaps use another TargetName to avoid having to say\r\n\u201cThe TLSA base name is taken from the SVCB TargetName.\u201d?\r\n\r\n\u2014 \u201c7.8. DNS AliasMode\u201d: I don't understand the example given. Where does `ns1`\r\ncome from?\r\n\r\n\u2014 nitpick/personal: I would prefer the examples to go from specific to general,\r\nand as such I would put the two DNS cases currently at the end more in the\r\nmiddle, right before \u201cNew scheme ServiceMode\u201d\r\n\r\n*\r\n\r\nSection 8\r\n\r\n\u2014 \u201cIANA is instructed to add the following entry to the \u201cUnderscored and\r\nGlobally Scoped DNS Node Names\u201d registry:\u201d Give some references on where this\r\nregistry is located/where it is defined? (RFC 8553 maybe?)",
+      "createdAt": "2023-07-13T20:28:02Z",
+      "updatedAt": "2023-10-23T19:58:56Z",
+      "closedAt": "2023-10-23T19:58:56Z",
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOGdgwDc5rgqvr",
+      "title": "SECDIR Review Notes",
+      "url": "https://github.com/bemasc/svcb-dane/issues/9",
+      "state": "CLOSED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "bemasc"
+      ],
+      "labels": [],
+      "body": "Credit: Donald Eastlake\r\n\r\nFirst page headings: \"Updates\" should just have the RFC number \"6698\" not \"rfc6698\" (See in the xml source where it says 'updates=\"rfc6698\" '.)\r\n\r\nTitle: I suggest expanding a bit to something like the following, which the RFC Editor may want you to do anyway:\r\n    \"Using DNS Service Bindings (SVCB) with DNS-Based Authentication of Named Entities (DANE)\"\r\n\r\nAbstract: I think it should mention \"_quic\". I suggest something like\r\n\r\nDNS Service Binding (SVCB) resource records (RRs) add a new form of name indirection to the DNS. This document specifies DNS-Based Authentication of Named Entities (DANE) interaction with Service Bindings to secure endpoints, including the use of ports and transports discovered via Service Parameters. It also specifies the _quic underscored DNS node name to designate the QUIC transport.\r\n\r\nSection 1, last word of first paragraph: maybe \"TLS\" -> \"TLS/DTLS\".\r\n\r\nThis document would benefit from some additional terminology definitions in Section 2 for such things as SvcParam and SNI. Perhaps there should be a reference to the DNS terminology draft-ietf-dnsop-rfc8499bis-08.\r\n\r\nSection 3, 2nd paragraph: \"was entirely secure\" -> \"was entirely secured by DNSSEC\".\r\n\r\nSection 5.2: Is \"Accidental\" the right word in the Section name? Would \"Erroneous\" or some other word be better?\r\n- It isn't clear from the text what a \"third-party consumer\" is. Maybe a figure with boxes would help. \"third-party\" is hyphenated in one place but not in another.\r\n- In the last sentence, \"take caution\" sounds a little odd to me; suggest either \"take care\" or \"be cautious\".\r\n\r\nSection 6, first line: suggest \"property\" -> \"part\"\r\n\r\nSection 8: Seems more polite to say \"requested\" rather than \"instructed\".",
+      "createdAt": "2023-07-13T20:34:08Z",
+      "updatedAt": "2023-10-23T20:00:25Z",
+      "closedAt": "2023-10-23T20:00:25Z",
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOGdgwDc51tYRz",
+      "title": "Unknown Key-Share attacks in a browser context",
+      "url": "https://github.com/bemasc/svcb-dane/issues/12",
+      "state": "CLOSED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "I think the UKS section might need a tweak to address the browser context: if the attacker can fool the browser into thinking that victim.example is attacker.example, it might be able to retrieve confidential resources and then access them from JS via the same-origin policy.\r\n\r\nThe conclusion is not really changed but the analysis is slightly different.",
+      "createdAt": "2023-11-02T18:30:17Z",
+      "updatedAt": "2023-11-29T16:54:06Z",
+      "closedAt": "2023-11-29T16:54:06Z",
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOGdgwDc4vnmGq",
+      "title": "Clarify CNAME handling and add IANA section",
+      "url": "https://github.com/bemasc/svcb-dane/pull/1",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-12-09T14:58:13Z",
+      "updatedAt": "2021-12-09T15:27:09Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "6baf00b62785a735c275b843d29271b120eb9c7f",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-update1",
+      "headRefOid": "f366cb815f6685e6273098c53b1f13cb357f763f",
+      "closedAt": "2021-12-09T15:27:04Z",
+      "mergedAt": "2021-12-09T15:27:04Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "cee0830b9721794a1dc5a86a36840cf2bcb7fd68"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOGdgwDc4voe6X",
+      "title": "Minor revisions",
+      "url": "https://github.com/bemasc/svcb-dane/pull/2",
+      "state": "MERGED",
+      "author": "evansrg",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For normative text:\r\n- Update abstract\r\n- Clarify \"final\" means following AliasMode indirection\r\n- Specify that TargetName CNAME target base domain must be resolved first\r\n- Clarify that SNI and base name match the actual TLSA record found\r\n\r\nFor examples:\r\n- State that DNSSEC is assumed for examples\r\n- Add \"URI\" when describing example services for clarity\r\n- Fix 0 priority in ServiceMode record\r\n- Explain transport label is selected by client\r\n- Explain CNAME fallback sequence\r\n- Minor formatting",
+      "createdAt": "2021-12-09T19:43:14Z",
+      "updatedAt": "2021-12-09T22:07:38Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "cee0830b9721794a1dc5a86a36840cf2bcb7fd68",
+      "headRepository": "evansrg/svcb-dane",
+      "headRefName": "edits",
+      "headRefOid": "85f22fcb98d1eaf4517c043bcc688c55636612e4",
+      "closedAt": "2021-12-09T22:07:38Z",
+      "mergedAt": "2021-12-09T22:07:38Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "10ba733905972c6307cf4016cfe896992a9a0f54"
+      },
+      "comments": [
+        {
+          "author": "evansrg",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Updated and squashed",
+          "createdAt": "2021-12-09T21:59:52Z",
+          "updatedAt": "2021-12-09T21:59:52Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGdgwDc4xXH-1",
+          "commit": {
+            "abbreviatedOid": "4792637"
+          },
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-12-09T20:08:44Z",
+          "updatedAt": "2021-12-09T20:20:34Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "```suggestion\r\n* The initial TLSA base domain MUST be the final SVCB TargetName used for this connection attempt.  (Names appearing earlier in a resolution chain are not used.)\r\n```",
+              "createdAt": "2021-12-09T20:08:44Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 19,
+              "body": "```suggestion\r\nIf the SVCB TargetName contains a CNAME record, clients MUST first try to use the CNAME target as the TLSA base domain, with fallback to the final SVCB TargetName as the TLSA base domain, as described in {{Section 7 of RFC7671}}.\r\n```",
+              "createdAt": "2021-12-09T20:09:24Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 73,
+              "body": "```suggestion\r\nIf the connection attempt is using HTTP/3, the transport label is set to `_quic`\\; otherwise `_tcp` is used.\r\n```",
+              "createdAt": "2021-12-09T20:11:52Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 69,
+              "body": "```suggestion\r\napi.example.com.  HTTPS 1 svc4.example.net alpn=h2,h3 port=8443\r\n```",
+              "createdAt": "2021-12-09T20:12:38Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 75,
+              "body": "```suggestion\r\nThe initial TLSA QNAME would be one of:\r\n```",
+              "createdAt": "2021-12-09T20:13:16Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 96,
+              "body": "```suggestion\r\nThe TLSA QNAME is `_8443._$PROTO.api.example.com`, where $PROTO is the appropriate value for the client-selected transport as discussed in {{protocols}} .\r\n```",
+              "createdAt": "2021-12-09T20:14:29Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            },
+            {
+              "originalPosition": 56,
+              "body": "I liked this better the other way.  HTTPS does allow the chain to terminate with an AliasMode record.  This way seems too similar to the previous example.",
+              "createdAt": "2021-12-09T20:17:40Z",
+              "updatedAt": "2021-12-09T20:20:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGdgwDc4xXeqg",
+          "commit": {
+            "abbreviatedOid": "96a7d6c"
+          },
+          "author": "evansrg",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2021-12-09T21:56:17Z",
+          "updatedAt": "2021-12-09T21:56:18Z",
+          "comments": [
+            {
+              "originalPosition": 56,
+              "body": "Reverted",
+              "createdAt": "2021-12-09T21:56:18Z",
+              "updatedAt": "2021-12-09T21:56:18Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOGdgwDc4xXg3c",
+          "commit": {
+            "abbreviatedOid": "85f22fc"
+          },
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2021-12-09T22:07:32Z",
+          "updatedAt": "2021-12-09T22:07:32Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOGdgwDc4vw8ok",
+      "title": "Rephrase CNAME rules",
+      "url": "https://github.com/bemasc/svcb-dane/pull/3",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-12-13T15:00:47Z",
+      "updatedAt": "2022-01-04T20:33:38Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "10ba733905972c6307cf4016cfe896992a9a0f54",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-cname",
+      "headRefOid": "ffd09c6333cec052cfbb65cb833fc78ef3b62202",
+      "closedAt": "2022-01-04T20:33:36Z",
+      "mergedAt": "2022-01-04T20:33:36Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "c9f0d4fc17e7ae9a08dbfae79fa67dc9359dc90d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGdgwDc4yTgF4",
+          "commit": {
+            "abbreviatedOid": "ffd09c6"
+          },
+          "author": "evansrg",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-01-04T20:25:00Z",
+          "updatedAt": "2022-01-04T20:25:00Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOGdgwDc5CFm_T",
+      "title": "Fix misspelling of Service Binding",
+      "url": "https://github.com/bemasc/svcb-dane/pull/4",
+      "state": "MERGED",
+      "author": "Saklad5",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I assume \"Serving Binding\" was not the intended term.",
+      "createdAt": "2022-11-02T20:06:06Z",
+      "updatedAt": "2022-11-03T13:48:26Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "6e945bef3591b06355327f17117aec4169db1cc6",
+      "headRepository": null,
+      "headRefName": "typo-fix",
+      "headRefOid": "6549c9b098013370bab5348332a185a41b92c7ca",
+      "closedAt": "2022-11-03T13:48:25Z",
+      "mergedAt": "2022-11-03T13:48:25Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "155b2ba8f5711fec768009989b1896bb1c199014"
+      },
+      "comments": [
+        {
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "body": "Thanks for the correction!",
+          "createdAt": "2022-11-03T13:47:56Z",
+          "updatedAt": "2022-11-03T13:47:56Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOGdgwDc5Fjfjt",
+          "commit": {
+            "abbreviatedOid": "6549c9b"
+          },
+          "author": "bemasc",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-11-03T13:47:33Z",
+          "updatedAt": "2022-11-03T13:47:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOGdgwDc5UuBqw",
+      "title": "Recommend against relying on the weird CNAME behavior",
+      "url": "https://github.com/bemasc/svcb-dane/pull/6",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-07-05T15:46:35Z",
+      "updatedAt": "2024-01-19T22:34:42Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "3c0385fc9e29114ee969cab6390169868eb52347",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-cname",
+      "headRefOid": "3c194ad846ef059b4952b56cad4fa656f9cc6ac0",
+      "closedAt": "2023-10-23T19:55:51Z",
+      "mergedAt": "2023-10-23T19:55:51Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "3cbe877f51c37152abf1f3c4a28a800f6422a284"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOGdgwDc5Uu062",
+      "title": "Discuss Unknown Key-Share attacks",
+      "url": "https://github.com/bemasc/svcb-dane/pull/7",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-07-05T18:28:49Z",
+      "updatedAt": "2024-01-19T22:34:42Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "3c0385fc9e29114ee969cab6390169868eb52347",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-uks",
+      "headRefOid": "10f10ad83eac24faf384746533b4d8837a88a7ac",
+      "closedAt": "2023-10-23T19:56:09Z",
+      "mergedAt": "2023-10-23T19:56:09Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "853c7894dff97d10be0f2a15eae9df1df0ddf774"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOGdgwDc5XIT2Z",
+      "title": "Fix issues reported by DNSDIR review",
+      "url": "https://github.com/bemasc/svcb-dane/pull/10",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #8",
+      "createdAt": "2023-08-03T17:10:29Z",
+      "updatedAt": "2024-01-19T22:34:42Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "853c7894dff97d10be0f2a15eae9df1df0ddf774",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-dnsdir",
+      "headRefOid": "7922b9843d6904b46bb6d71bfc79e8bd06f27ac1",
+      "closedAt": "2023-10-23T19:58:55Z",
+      "mergedAt": "2023-10-23T19:58:55Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "46996cbb79a2fa7b3d4e9673a8ccdb6dc3148cd4"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOGdgwDc5XIvp0",
+      "title": "Address SECDIR comments",
+      "url": "https://github.com/bemasc/svcb-dane/pull/11",
+      "state": "MERGED",
+      "author": "bemasc",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #9",
+      "createdAt": "2023-08-03T18:55:54Z",
+      "updatedAt": "2024-01-19T22:34:43Z",
+      "baseRepository": "bemasc/svcb-dane",
+      "baseRefName": "main",
+      "baseRefOid": "46996cbb79a2fa7b3d4e9673a8ccdb6dc3148cd4",
+      "headRepository": "bemasc/svcb-dane",
+      "headRefName": "bemasc-secdir",
+      "headRefOid": "f4b2427faa486f80fb77407825a21010ff46a91f",
+      "closedAt": "2023-10-23T20:00:24Z",
+      "mergedAt": "2023-10-23T20:00:24Z",
+      "mergedBy": "bemasc",
+      "mergeCommit": {
+        "oid": "ab0f13360266249394a5274e080425cbd893d628"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
