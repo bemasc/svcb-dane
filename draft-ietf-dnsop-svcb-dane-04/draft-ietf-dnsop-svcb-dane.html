@@ -10,24 +10,23 @@
 <meta content="
        Service Binding (SVCB) records introduce a new form of name indirection in DNS.  They also convey information about the endpoint's supported protocols, such as whether QUIC transport is available.  This document specifies how DNS-Based Authentication of Named Entities (DANE) interacts with Service Bindings to secure connections, including use of port numbers and transport protocols discovered via SVCB queries.  The &quot;_quic&quot; transport name label is introduced to distinguish TLSA records for DTLS and QUIC. 
     " name="description">
-<meta content="xml2rfc 3.18.2" name="generator">
+<meta content="xml2rfc 3.22.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-dnsop-svcb-dane-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.18.2
-    Python 3.11.6
-    ConfigArgParse 1.5.3
+  xml2rfc 3.22.0
+    Python 3.12.3
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
-    Jinja2 3.1.2
-    lxml 4.9.3
-    platformdirs 4.0.0
+    Jinja2 3.1.4
+    lxml 4.9.4
+    platformdirs 4.2.2
     pycountry 22.3.5
-    PyYAML 6.0
-    requests 2.31.0
-    setuptools 67.7.2
-    six 1.16.0
-    wcwidth 0.2.10
+    PyYAML 6.0.1
+    requests 2.32.3
+    setuptools 69.5.1
+    wcwidth 0.2.13
 -->
 <link href="draft-ietf-dnsop-svcb-dane.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1048,11 +1047,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">SVCB-DANE</td>
-<td class="right">November 2023</td>
+<td class="right">July 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schwartz &amp; Evans</td>
-<td class="center">Expires 1 June 2024</td>
+<td class="center">Expires 23 January 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-29" class="published">29 November 2023</time>
+<time datetime="2024-07-22" class="published">22 July 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-06-01">1 June 2024</time></dd>
+<dd class="expires"><time datetime="2025-01-23">23 January 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1119,7 +1118,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1128,7 +1127,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1344,7 +1343,7 @@ dane-central.provider.example.  TLSA  ...
 <a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-unintended-pinning" class="section-name selfRef">Unintended pinning</a>
         </h3>
 <p id="section-5.2-1">As noted in <span><a href="https://rfc-editor.org/rfc/rfc7671#section-6" class="relref">Section 6</a> of [<a href="#RFC7671" class="cite xref">RFC7671</a>]</span>, DANE encounters operational difficulties when the TLSA RRset is published by an entity other than the service provider.  For example, a customer might copy the TLSA records into their own zone, rather than publishing an alias to the TLSA RRset hosted in the service provider's zone.  When the service subsequently rotates its TLS keys, DANE authentication will fail, resulting in an outage for this customer.  Accordingly, zone owners <span class="bcp14">MUST NOT</span> publish TLSA records for public keys that are not under their control unless they have an explicit arrangement with the key holder.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">To prevents the above misconfiguration and ensure that TLS keys can be rotated freely, service operators <span class="bcp14">MAY</span> reject TLS connections whose SNI does not correspond to an approved TLSA base domain.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">To prevent the above misconfiguration and ensure that TLS keys can be rotated freely, service operators <span class="bcp14">MAY</span> reject TLS connections whose SNI does not correspond to an approved TLSA base domain.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <p id="section-5.2-3">Service Bindings also enable any third party consumer to publish fixed SvcParams for the service.  This can cause an outage or service degradation if the service makes a backward-incompatible configuration change.  Accordingly, zone owners should avoid publishing SvcParams for a TargetName that they do not control, and service operators should exercise caution when making incompatible configuration changes.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1532,6 +1531,7 @@ svc4.example.net. SVCB 3 . alpn=foo,bar port=8004
       </table>
 </section>
 </div>
+<div id="sec-combined-references">
 <section id="section-9">
       <h2 id="name-references">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
@@ -1635,6 +1635,7 @@ svc4.example.net. SVCB 3 . alpn=foo,bar port=8004
 </section>
 </div>
 </section>
+</div>
 <div id="uks">
 <section id="appendix-A">
       <h2 id="name-unknown-key-share-attacks">

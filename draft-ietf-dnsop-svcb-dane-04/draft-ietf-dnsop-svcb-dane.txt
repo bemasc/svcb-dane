@@ -6,7 +6,7 @@ dnsop                                                     B. M. Schwartz
 Internet-Draft                                      Meta Platforms, Inc.
 Updates: 6698 (if approved)                                     R. Evans
 Intended status: Standards Track                              Google LLC
-Expires: 1 June 2024                                    29 November 2023
+Expires: 23 January 2025                                    22 July 2024
 
 
  Using DNSSEC Authentication of Named Entities (DANE) with DNS Service
@@ -46,11 +46,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 June 2024.
+   This Internet-Draft will expire on 23 January 2025.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -230,8 +230,8 @@ Table of Contents
    their control unless they have an explicit arrangement with the key
    holder.
 
-   To prevents the above misconfiguration and ensure that TLS keys can
-   be rotated freely, service operators MAY reject TLS connections whose
+   To prevent the above misconfiguration and ensure that TLS keys can be
+   rotated freely, service operators MAY reject TLS connections whose
    SNI does not correspond to an approved TLSA base domain.
 
    Service Bindings also enable any third party consumer to publish
