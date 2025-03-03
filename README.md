@@ -1,6 +1,6 @@
-# Using Service Bindings with DANE
+# Using DNSSEC Authentication of Named Entities (DANE) with DNS Service Bindings (SVCB) and QUIC
 
-This is the working area for the IETF [DNSOP Working Group](https://datatracker.ietf.org/wg/dnsop/documents/) Internet-Draft, "Using Service Bindings with DANE".
+This is the working area for the IETF [DNSOP Working Group](https://datatracker.ietf.org/group/dnsop/documents/) Internet-Draft, "Using DNSSEC Authentication of Named Entities (DANE) with DNS Service Bindings (SVCB) and QUIC".
 
 * [Editor's Copy](https://bemasc.github.io/svcb-dane/#go.draft-ietf-dnsop-svcb-dane.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-dane)
