@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-01-21T01:16:48.683870+00:00",
+  "timestamp": "2025-03-04T00:51:26.038164+00:00",
   "repo": "bemasc/svcb-dane",
   "labels": [
     {
@@ -169,8 +169,8 @@
       "title": "Minor revisions",
       "url": "https://github.com/bemasc/svcb-dane/pull/2",
       "state": "MERGED",
-      "author": "evansrg",
-      "authorAssociation": "COLLABORATOR",
+      "author": null,
+      "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "For normative text:\r\n- Update abstract\r\n- Clarify \"final\" means following AliasMode indirection\r\n- Specify that TargetName CNAME target base domain must be resolved first\r\n- Clarify that SNI and base name match the actual TLSA record found\r\n\r\nFor examples:\r\n- State that DNSSEC is assumed for examples\r\n- Add \"URI\" when describing example services for clarity\r\n- Fix 0 priority in ServiceMode record\r\n- Explain transport label is selected by client\r\n- Explain CNAME fallback sequence\r\n- Minor formatting",
@@ -179,7 +179,7 @@
       "baseRepository": "bemasc/svcb-dane",
       "baseRefName": "main",
       "baseRefOid": "cee0830b9721794a1dc5a86a36840cf2bcb7fd68",
-      "headRepository": "evansrg/svcb-dane",
+      "headRepository": "rrevans/svcb-dane",
       "headRefName": "edits",
       "headRefOid": "85f22fcb98d1eaf4517c043bcc688c55636612e4",
       "closedAt": "2021-12-09T22:07:38Z",
@@ -190,8 +190,8 @@
       },
       "comments": [
         {
-          "author": "evansrg",
-          "authorAssociation": "COLLABORATOR",
+          "author": null,
+          "authorAssociation": "NONE",
           "body": "Updated and squashed",
           "createdAt": "2021-12-09T21:59:52Z",
           "updatedAt": "2021-12-09T21:59:52Z"
@@ -259,8 +259,8 @@
           "commit": {
             "abbreviatedOid": "96a7d6c"
           },
-          "author": "evansrg",
-          "authorAssociation": "COLLABORATOR",
+          "author": null,
+          "authorAssociation": "NONE",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2021-12-09T21:56:17Z",
@@ -321,8 +321,8 @@
           "commit": {
             "abbreviatedOid": "ffd09c6"
           },
-          "author": "evansrg",
-          "authorAssociation": "COLLABORATOR",
+          "author": null,
+          "authorAssociation": "NONE",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2022-01-04T20:25:00Z",
